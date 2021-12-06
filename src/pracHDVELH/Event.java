@@ -18,46 +18,66 @@ public class Event extends NodeMultiple {
 	public static final String PROMPT_ANSWER = "Answer: ";
 	public static final String WARNING_MSG_INTEGER_EXPECTED = "Please input a integer within range!";
 
+	private static int lastID = 0;
+	private GUIManager gui;
+	private String data;
+	private String playerAnswer;
+	private Scanner inputReader;
+	private int chosenPath;
+	private int id;
+
+	public Event(GUIManager gui, String string) {
+		super(string);
+		this.gui = gui;
+		this.data = string;
+		this.inputReader = gui.getInputReader();
+		id = ++lastID;
+	}
+
+	public Event() {
+		this(new GUIManager(), null);
+	}
+
 	/**
 	 * @return the playerAnswer
 	 */
 	public String getPlayerAnswer() {
-		/* TO BE COMPLETED */
+		return playerAnswer;
 	}
 
 	/**
 	 * @param playerAnswer the playerAnswer to set
 	 */
 	public void setPlayerAnswer(String playerAnswer) {
-		/* TO BE COMPLETED */
+		this.playerAnswer = playerAnswer;
 	}
 
 	/**
 	 * @return the reader
 	 */
 	public Scanner getReader() {
-		/* TO BE COMPLETED */
+		return inputReader;
 	}
 
 	/**
 	 * @param reader the reader to set
 	 */
 	public void setReader(Scanner reader) {
-		/* TO BE COMPLETED */
+		inputReader = reader;
 	}
 
 	/**
 	 * @return the chosenPath
 	 */
 	public int getChosenPath() {
-		/* TO BE COMPLETED */
+		return chosenPath;
 	}
 
 	/**
 	 * @param chosenPath the chosenPath to set
 	 */
 	public void setChosenPath(int chosenPath) {
-		/* TO BE COMPLETED */
+		this.chosenPath = chosenPath;
 	}
 
 	/* Methods */
@@ -65,7 +85,7 @@ public class Event extends NodeMultiple {
 	 * @see pracHDVELH.NodeMultiple#getData()
 	 */
 	public String getData() {
-		/* TO BE COMPLETED */
+		return this.data;
 	}
 
 	/**
@@ -73,7 +93,12 @@ public class Event extends NodeMultiple {
 	 * @param data
 	 */
 	public void setData(String data) {
-		/* TO BE COMPLETED */
+		this.data = data;
+	}
+
+	public int interpretAnswer() {
+		chosenPath = Integer.parseInt(playerAnswer) - 1;
+		return chosenPath;
 	}
 
 	/**
@@ -81,7 +106,7 @@ public class Event extends NodeMultiple {
 	 */
 	@Override
 	public Event getDaughter(int i) {
-		/* TO BE COMPLETED */
+		return (Event)getDaughters()[i];
 	}
 
 	/**
@@ -90,33 +115,47 @@ public class Event extends NodeMultiple {
 	 * @param i
 	 */
 	public void setDaughter(Event daughter, int i) {
-		/* TO BE COMPLETED */
+		NodeMultiple[] daughters = getDaughters();
+		if(daughters == null) {return;}
+		if(daughter == null) {return;}
+		if(i < daughters.length) {
+			daughters[i] = daughter;
+		}
+		setDaughters(daughters);
 	}
 
 	/**
+	 *
 	 * @return the gui
 	 */
 	public GUIManager getGui() {
-		/* TO BE COMPLETED */
+		return gui;
 	}
 
 	/**
 	 * @param gui the gui to set
 	 */
 	public void setGui(GUIManager gui) {
-		/* TO BE COMPLETED */
+		this.gui = gui;
 	}
 
 	/**
 	 * @return the id
 	 */
 	public int getId() {
-		/* TO BE COMPLETED */
+		return id;
 	}
 
-	/* Methods */
-	/* TO BE COMPLETED */
-	
+	public Event run() {
+		gui.outputln(this.getData());
+		gui.outputln(PROMPT_ANSWER);
+		playerAnswer = inputReader.next();
+		chosenPath = interpretAnswer();
+		return getDaughter(chosenPath);
+	}
+
+
+
 }
 
 // eof
